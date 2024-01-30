@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <AppHeader />
-    <SearchResults :book="book" />
-    <div class="content">
+    <SearchResults :book="book" @update="updateContentVisibility" />
+    <div class="content" v-if="!isSearchActive">
       <AppArticle />
       <AppMain />
     </div>
@@ -21,6 +21,16 @@
       AppArticle,
       AppMain,
       SearchResults,
+    },
+    data() {
+      return {
+        isSearchActive: false,
+      };
+    },
+    methods: {
+      updateContentVisibility(isSearchActive) {
+        this.isSearchActive = isSearchActive;
+      },
     },
   };
 </script>
