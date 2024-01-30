@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <AppHeader />
+    <SearchResults :book="book" />
     <div class="content">
       <AppArticle />
       <AppMain />
@@ -12,16 +13,17 @@
   import AppHeader from "./components/AppHeader.vue";
   import AppArticle from "./components/AppArticle.vue";
   import AppMain from "./components/AppMain.vue";
+  import SearchResults from "./components/SearchResults.vue";
   export default {
     name: "App",
     components: {
       AppHeader,
       AppArticle,
       AppMain,
+      SearchResults,
     },
   };
 </script>
-
 <style>
   * {
     margin: 0;

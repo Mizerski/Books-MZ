@@ -35,7 +35,8 @@
 
   .background-content {
     height: 100%;
-    width: auto;
+    width: 100%;
+    object-fit: cover;
   }
 
   @media (max-width: 600px) {

@@ -18,49 +18,14 @@
           reading.
         </h2>
       </div>
-      <div class="search-bar">
-        <input
-          type="text"
-          placeholder="Search"
-          v-model="searchTerm"
-          @keyup.enter="searchBook"
-        />
-      </div>
-      <div class="search-results" v-if="book">
-        <img :src="book.image" alt="Book cover" />
-      </div>
     </div>
   </div>
 </template>
-
 <script>
-  import axios from "axios";
-
   export default {
     name: "AppArticle",
-    data() {
-      return {
-        searchTerm: "",
-        book: null,
-      };
-    },
-    methods: {
-      async searchBook() {
-        const response = await axios.get(
-          `https://www.googleapis.com/books/v1/volumes?q=${this.searchTerm}&filter=free-ebooks&projection=lite`
-        );
-        if (response.data.items && response.data.items.length > 0) {
-          const bookData = response.data.items[0].volumeInfo;
-          this.book = {
-            image: bookData.imageLinks ? bookData.imageLinks.thumbnail : "",
-            previewLink: bookData.previewLink,
-          };
-        }
-      },
-    },
   };
 </script>
-
 <style scoped>
   @import url("https://fonts.googleapis.com/css2?family=Handlee&display=swap");
 
