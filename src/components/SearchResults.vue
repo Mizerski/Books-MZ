@@ -13,6 +13,7 @@
       <div v-for="book in searchedBooks" :key="book.previewLink" class="result">
         <p class="book-title">{{ book.title }}</p>
         <p class="book-author">by {{ book.author }}</p>
+        <p class="book-author">Published: {{ book.publishedDate }}</p>
         <img :src="book.image" alt="Book cover" />
         <a :href="book.previewLink" target="_blank" class="book-link"
           >Read this book</a
@@ -51,19 +52,27 @@
           this.errorMessage = "Por favor, insira um termo de pesquisa.";
           return;
         }
-        const response = await axios.get(
-          `https://www.googleapis.com/books/v1/volumes?q=${this.searchTerm}&filter=free-ebooks&projection=lite&startIndex=${this.startIndex}&maxResults=${this.maxResults}`
-        );
+        try {
+          const response = await this.fetchBooks();
+          this.processResponse(response);
+        } catch (error) {
+          this.errorMessage = "Erro ao buscar livros.";
+        }
+      },
+      async fetchBooks() {
+        const url = `https://www.googleapis.com/books/v1/volumes`;
+        const params = {
+          q: this.searchTerm,
+          filter: "free-ebooks",
+          projection: "lite",
+          startIndex: this.startIndex,
+          maxResults: this.maxResults,
+        };
+        return await axios.get(url, { params });
+      },
+      processResponse(response) {
         if (response.data.items && response.data.items.length > 0) {
-          this.searchedBooks = response.data.items.map((item) => {
-            const bookData = item.volumeInfo;
-            return {
-              image: bookData.imageLinks ? bookData.imageLinks.thumbnail : "",
-              previewLink: bookData.previewLink,
-              title: bookData.title,
-              author: bookData.authors ? bookData.authors[0] : "???",
-            };
-          });
+          this.searchedBooks = this.mapBookData(response.data.items);
           this.errorMessage = "";
           this.$emit("update", this.searchedBooks.length > 0);
           this.hasMoreResults =
@@ -71,6 +80,18 @@
         } else {
           this.errorMessage = "Nenhum livro encontrado.";
         }
+      },
+      mapBookData(items) {
+        return items.map((item) => {
+          const bookData = item.volumeInfo;
+          return {
+            image: bookData.imageLinks ? bookData.imageLinks.thumbnail : "",
+            previewLink: bookData.previewLink,
+            title: bookData.title,
+            author: bookData.authors ? bookData.authors[0] : "???",
+            publishedDate: bookData.publishedDate,
+          };
+        });
       },
       loadMore() {
         this.startIndex += this.maxResults;
@@ -163,7 +184,14 @@
     border-color: #000;
     border-width: 1px;
   }
-
+  .book-title,
+  .book-author {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   @media (max-width: 600px) {
     .grid {
       grid-template-columns: repeat(2, 1fr);
