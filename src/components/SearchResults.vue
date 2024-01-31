@@ -49,14 +49,14 @@
     methods: {
       async searchBook() {
         if (!this.searchTerm) {
-          this.errorMessage = "Por favor, insira um termo de pesquisa.";
+          this.errorMessage = "Please enter a search term.";
           return;
         }
         try {
           const response = await this.fetchBooks();
           this.processResponse(response);
         } catch (error) {
-          this.errorMessage = "Erro ao buscar livros.";
+          this.errorMessage = "Something went wrong. Please try again.";
         }
       },
       async fetchBooks() {
@@ -78,7 +78,7 @@
           this.hasMoreResults =
             response.data.totalItems > this.startIndex + this.maxResults;
         } else {
-          this.errorMessage = "Nenhum livro encontrado.";
+          this.errorMessage = "No results found. Please try again.";
         }
       },
       mapBookData(items) {
