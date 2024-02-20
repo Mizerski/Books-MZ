@@ -35,11 +35,14 @@
   };
 </script>
 <style>
+  /*    background-color: #f7f9ec; 
+*/
+
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #f7f9ec;
+    background-color: #b4602f;
   }
   #app {
     display: flex;
